@@ -21,7 +21,7 @@ public class MoveStands extends BukkitRunnable {
 	public void run() {
 		ListIterator<FloatingBlock> it = RiftAnimations.stands.listIterator();
 
-		while(it.hasNext()) {
+		while(it.hasNext()) try {
 			FloatingBlock floatingBlock = it.next();
 			ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
 			Player player = Bukkit.getServer().getPlayer(floatingBlock.getPlayerUUID());
@@ -32,13 +32,13 @@ public class MoveStands extends BukkitRunnable {
 			double y = MathUtil.correction(blockLocation.getY(), playerLocation.getY());
 			double z = MathUtil.correction(blockLocation.getZ(), playerLocation.getZ());
 
-			if(MathUtil.isToFar(blockLocation.getX(), playerLocation.getX())
+			if (MathUtil.isToFar(blockLocation.getX(), playerLocation.getX())
 					|| MathUtil.isToFar(blockLocation.getY(), playerLocation.getY())
-					|| MathUtil.isToFar(blockLocation.getZ(), playerLocation.getZ()) ) {
+					|| MathUtil.isToFar(blockLocation.getZ(), playerLocation.getZ())) {
 
 				StandUtil.removeStand(floatingBlock.getEntId(), Bukkit.getPlayer(floatingBlock.getPlayerUUID()));
 				it.remove();
-			} else if(floatingBlock.getMoves() >= 100) {
+			} else if (floatingBlock.getMoves() >= 100) {
 				StandUtil.removeStand(floatingBlock.getEntId(), Bukkit.getPlayer(floatingBlock.getPlayerUUID()));
 				it.remove();
 			} else {
@@ -58,13 +58,15 @@ public class MoveStands extends BukkitRunnable {
 
 				floatingBlock.setLocation(new Location(floatingBlock.getLocation().getWorld(), x, y, z));
 
-				if(MathUtil.isNear(floatingBlock.getLocation(), playerLocation)) {
+				if (MathUtil.isNear(floatingBlock.getLocation(), playerLocation)) {
 					StandUtil.removeStand(floatingBlock.getEntId(), player);
 					it.remove();
 				}
 
 				floatingBlock.addMove();
 			}
+		} catch (Exception e) {
+			it.remove();
 		}
 	}
 }
