@@ -1,0 +1,4 @@
+name: Rift-Animations
+version: ${project.version}
+main: me.berry.riftanimations.RiftAnimations
+depend: [ ProtocolLib ]
